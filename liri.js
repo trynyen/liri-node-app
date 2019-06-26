@@ -156,6 +156,7 @@ function movie(movieSearch) {
 
             // rottenTomatoesRating()
             var rottenTomatoesRating;
+            
             for(var i = 0; i < response.data.Ratings.length; i++){
                 if(response.data.Ratings[i].Source === "Rotten Tomatoes"){
                     rottenTomatoesRating = response.data.Ratings[i].Value;
