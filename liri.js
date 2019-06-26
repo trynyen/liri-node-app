@@ -161,10 +161,9 @@ function movie(movieSearch) {
                     rottenTomatoesRating = response.data.Ratings[i].Value;
                     console.log(rottenTomatoesRating)
                 }
-                if(response.data.Ratings[i].Value === undefined){
-                    rottenTomatoesRating = "Not found"
+                if(response.data.Ratings[i].Value == undefined){
+                    rottenTomatoesRating = "Not found";
                 }
-
             }
 
             //Log Movie Details
