@@ -23,12 +23,6 @@ else if (action === "movie-this") {
 function concert() {
     var artistSearch = process.argv.slice(3).join(" ");
 
-    //If artist data not entered, artist is set to default
-    if (artistSearch == undefined || null) {
-        artistSearch = "Arvil Lavigne";
-    }
-    
-    //Otherwise, get artist search details
     axios.get("https://rest.bandsintown.com/artists/" + artistSearch + "/events?app_id=codingbootcamp")
         .then(function (response) {
             for (var i = 0; i < response.data.length; i++) {
@@ -49,7 +43,7 @@ function spotifySong() {
 
     //If track data not entered, track is set to default
     if (trackSearch == undefined || null) {
-        trackSearch = "Aggretsuko Theme";
+        trackSearch = "The Sign";
     }
 
     //Otherwise, search for track
@@ -80,7 +74,7 @@ function movie() {
 
     //If movie data not entered, movie is set to default
     if (movieSearch == undefined || null) {
-        movieSearch = "Toy Story 4";
+        movieSearch = "Mr. Nobody";
     }
 
     //Otherwise, get movie details
