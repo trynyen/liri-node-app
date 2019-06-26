@@ -58,7 +58,7 @@ function spotifySong(trackSearch) {
 
     //If track data not entered, track is set to default
     if (trackSearch == undefined || null) {
-        trackSearch = "The Sign";
+        trackSearch = "The Sign Ace of Base";
     }
 
     //Otherwise, search for track
@@ -72,12 +72,12 @@ function spotifySong(trackSearch) {
         }
         var trackDetails = data.tracks.items;
         for (var i = 0; i < trackDetails.length; i++) {
-            console.log(chalk.yellowBright.bold("------------------------------------------------------------"));
+            console.log(chalk.cyan.bold("------------------------------------------------------------"));
             console.log(chalk.blueBright("Artist(s): ") + trackDetails[i].artists[0].name);
             console.log(chalk.blueBright("Song: ") + trackDetails[i].name);
             console.log(chalk.blueBright("Preview track: ") + trackDetails[i].preview_url);
             console.log(chalk.blueBright("Album: ") + trackDetails[i].album.name);
-            console.log(chalk.yellowBright.bold("------------------------------------------------------------"));
+            console.log(chalk.cyan.bold("------------------------------------------------------------"));
         }
     }
     )
