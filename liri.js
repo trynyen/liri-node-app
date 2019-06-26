@@ -1,13 +1,46 @@
 require("dotenv").config();
 var keys = require("./keys.js");
 var axios = require("axios");
-var fs = require("fs");
+// var moment = require("moment-js");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
+//Setting action and calling functions
+var action = process.argv[2];
+
+if (action === "concert-this") {
+    concert();
+}
+else if (action === "spotify-this-song") {
+    spotifySong();
+}
+else if (action === "movie-this") {
+    movie();
+}
+
+//Bands in town search
+function concert() {
+    var artistSearch = process.argv.slice(3).join(" ");
+
+    if (artistSearch == undefined || null) {
+        artistSearch = "Bruno Mars";
+    }
+
+    axios.get("https://rest.bandsintown.com/artists/" + artistSearch + "/events?app_id=codingbootcamp")
+        .then(function (response) {
+            for (var i = 0; i < response.length; i++) {
+                console.log("------------------------------------------------------------");
+                console.log("Artist: " + response[i].lineup);
+                console.log("Venue: " + response[i].venue.name + ", " + response[i].venue.city + ", " + response[i].venue.country);
+                console.log("Date: " + response[i].datetime);
+                console.log("------------------------------------------------------------");
+            }
+        }
+        )
+}
 
 //Spotify search
-if (process.argv[2] == "spotify-this-song") {
+function spotifySong() {
     var trackSearch = process.argv.slice(3).join(" ");
 
     if (trackSearch == undefined || null) {
@@ -36,18 +69,23 @@ if (process.argv[2] == "spotify-this-song") {
 }
 
 //OMDB search
-else if (process.argv[2] == "movie-this") {
+function movie() {
     var movieSearch = process.argv.slice(3).join(" ")
 
+    if (movieSearch == undefined || null) {
+        movieSearch = "The Notebook";
+    }
 
-    axios.get("http://www.omdbapi.com/?t=" + movieSearch + "&y=&plot=short&apikey=trilogy").then(
-        function (response) {
+
+    axios.get("http://www.omdbapi.com/?t=" + movieSearch + "&y=&plot=short&apikey=trilogy")
+        .then(function (response) {
             //Search for Rotten Tomatoes Ratings
             function rottenTomatoesRating() {
-                response.data.Ratings.find(function (rating) {
+                return response.data.Ratings.find(function (rating) {
                     if (rating.Source === "Rotten Tomatoes") {
-                        return rating.Source.Value;
+                        return rating.Value;
                     }
+
                     else {
                         return "Rotten Tomatoes Rating is not available";
                     }
@@ -64,7 +102,7 @@ else if (process.argv[2] == "movie-this") {
             console.log("Plot: " + response.data.Plot);
             console.log("Cast: " + response.data.Actors);
         },
-    )
+        )
 };
 
 
