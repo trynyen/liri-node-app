@@ -9,6 +9,50 @@ var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
 
+//Play around with inquirer
+// var inquirer = require("inquirer");
+// inquirer.prompt([
+//     {
+//         type: "list",
+//         message: "Please choose an action",
+//         choices: ["concert-this", "spotify-this-song", "movie-this", "do-as-it-says"],
+//         name: "action",
+//     },
+//     {
+//         type: "input",
+//         message: "Please input a search query",
+//         name: "searchQuery",
+//     }
+// ])
+//     .then(function (inquirerResponse) {
+//         var action = inquirerResponse.action;
+//         var searchQuery = inquirerResponse.searchQuery;
+
+//         commands(action, searchQuery);
+
+//         function commands(action, searchQuery) {
+//             switch (action) {
+
+//                 case "concert-this":
+//                     concert(searchQuery);
+//                     break;
+
+//                 case "spotify-this-song":
+//                     spotifySong(searchQuery);
+//                     break;
+
+//                 case "movie-this":
+//                     movie(searchQuery);
+//                     break;
+
+//                 case "do-as-it-says":
+//                     showInfo();
+//                     break;
+
+//             }
+//         }
+//     })
+
 //Setting action, switching functions, and calling function
 var action = process.argv[2];
 var searchQuery = process.argv.slice(3).join(" ");
@@ -129,7 +173,7 @@ function showInfo() {
             return console.log(err);
         }
 
-        var dataArr = data.replace(/"/,"").split(",");
+        var dataArr = data.replace(/"/, "").split(",");
         commands(dataArr[0], dataArr[1]);
     })
 }
