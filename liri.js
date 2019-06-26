@@ -4,6 +4,7 @@ var keys = require("./keys.js");
 var axios = require("axios");
 var moment = require("node-moment");
 var fs = require("fs");
+var chalk = require("chalk");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
@@ -41,12 +42,12 @@ function concert(concertSearch) {
     axios.get("https://rest.bandsintown.com/artists/" + concertSearch + "/events?app_id=codingbootcamp")
         .then(function (response) {
             for (var i = 0; i < response.data.length; i++) {
-                console.log("------------------------------------------------------------");
-                console.log("Artist: " + response.data[i].lineup);
-                console.log("Venue: " + response.data[i].venue.name + ", " + response.data[i].venue.city + ", " + response.data[i].venue.country);
+                console.log(chalk.cyanBright.bold("------------------------------------------------------------"));
+                console.log(chalk.magentaBright("Artist: ") + response.data[i].lineup);
+                console.log(chalk.magentaBright("Venue: ") + response.data[i].venue.name + ", " + response.data[i].venue.city + ", " + response.data[i].venue.country);
                 var date = moment(response.data[i].datetime, '"YYYY-MM-DDTkk-mm-ss"').format("MM/DD/YYYY");
-                console.log("Date: " + date);
-                console.log("------------------------------------------------------------");
+                console.log(chalk.magentaBright("Date: ") + date);
+                console.log(chalk.cyanBright.bold("------------------------------------------------------------"));
             }
         }
         )
@@ -64,19 +65,19 @@ function spotifySong(trackSearch) {
     spotify.search({
         type: "track",
         query: trackSearch,
-        limit: 1,
+        limit: 10,
     }, function (err, data) {
         if (err) {
             return console.log(err);
         }
         var trackDetails = data.tracks.items;
         for (var i = 0; i < trackDetails.length; i++) {
-            console.log("------------------------------------------------------------");
-            console.log("Artist(s): " + trackDetails[i].artists[0].name);
-            console.log("Song: " + trackDetails[i].name);
-            console.log("Preview track: " + trackDetails[i].preview_url);
-            console.log("Album: " + trackDetails[i].album.name);
-            console.log("------------------------------------------------------------");
+            console.log(chalk.yellowBright.bold("------------------------------------------------------------"));
+            console.log(chalk.blueBright("Artist(s): ") + trackDetails[i].artists[0].name);
+            console.log(chalk.blueBright("Song: ") + trackDetails[i].name);
+            console.log(chalk.blueBright("Preview track: ") + trackDetails[i].preview_url);
+            console.log(chalk.blueBright("Album: ") + trackDetails[i].album.name);
+            console.log(chalk.yellowBright.bold("------------------------------------------------------------"));
         }
     }
     )
@@ -107,14 +108,16 @@ function movie(movieSearch) {
             }
 
             //Log Movie Details
-            console.log("Movie title: " + response.data.Title);
-            console.log("Year: " + response.data.Year);
-            console.log("imdb rating: " + response.data.imdbRating);
-            console.log("Rotten Tomatoes rating: " + rottenTomatoesRating());
-            console.log("Country: " + response.data.Country);
-            console.log("Language: " + response.data.Language);
-            console.log("Plot: " + response.data.Plot);
-            console.log("Cast: " + response.data.Actors);
+            console.log(chalk.magentaBright.bold("------------------------------------------------------------"));
+            console.log(chalk.cyan("Movie title: ") + response.data.Title);
+            console.log(chalk.cyan("Year: ") + response.data.Year);
+            console.log(chalk.cyan("imdb rating: ") + response.data.imdbRating);
+            console.log(chalk.cyan("Rotten Tomatoes rating: ") + rottenTomatoesRating());
+            console.log(chalk.cyan("Country: ") + response.data.Country);
+            console.log(chalk.cyan("Language: ") + response.data.Language);
+            console.log(chalk.cyan("Plot: ") + response.data.Plot);
+            console.log(chalk.cyan("Cast: ") + response.data.Actors);
+            console.log(chalk.magentaBright.bold("------------------------------------------------------------"));
         },
         )
 };
