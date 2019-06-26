@@ -97,7 +97,7 @@ function movie(movieSearch) {
             function rottenTomatoesRating() {
                 return response.data.Ratings.find(function (rating) {
                     if (rating.Source === "Rotten Tomatoes") {
-                        return rating.Value;
+                        return this.Value;
                     }
 
                     else {
@@ -126,8 +126,7 @@ function showInfo() {
             return console.log(err);
         }
 
-        var dataArr = data.split(",");
-        console.log(dataArr);
-        commands(data[0], dataArr[1]);
+        var dataArr = data.replace(/"/,"").split(",");
+        commands(dataArr[0], dataArr[1]);
     })
 }
