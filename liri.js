@@ -3,27 +3,42 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var axios = require("axios");
 var moment = require("node-moment");
+var fs = require("fs");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
-//Setting action and calling functions
-var action = process.argv[2];
 
-if (action === "concert-this") {
-    concert();
-}
-else if (action === "spotify-this-song") {
-    spotifySong();
-}
-else if (action === "movie-this") {
-    movie();
+//Setting action, switching functions, and calling function
+var action = process.argv[2];
+var searchQuery = process.argv.slice(3).join(" ");
+commands(action, searchQuery);
+
+function commands(action, searchQuery) {
+    switch (action) {
+
+        case "concert-this":
+            concert(searchQuery);
+            break;
+
+        case "spotify-this-song":
+            spotifySong(searchQuery);
+            break;
+
+        case "movie-this":
+            movie(searchQuery);
+            break;
+
+        case "do-as-it-says":
+            showInfo();
+            break;
+
+    }
 }
 
 //Bands in town search
-function concert() {
-    var artistSearch = process.argv.slice(3).join(" ");
+function concert(concertSearch) {
 
-    axios.get("https://rest.bandsintown.com/artists/" + artistSearch + "/events?app_id=codingbootcamp")
+    axios.get("https://rest.bandsintown.com/artists/" + concertSearch + "/events?app_id=codingbootcamp")
         .then(function (response) {
             for (var i = 0; i < response.data.length; i++) {
                 console.log("------------------------------------------------------------");
@@ -38,8 +53,7 @@ function concert() {
 }
 
 //Spotify search
-function spotifySong() {
-    var trackSearch = process.argv.slice(3).join(" ");
+function spotifySong(trackSearch) {
 
     //If track data not entered, track is set to default
     if (trackSearch == undefined || null) {
@@ -69,8 +83,7 @@ function spotifySong() {
 }
 
 //OMDB search
-function movie() {
-    var movieSearch = process.argv.slice(3).join(" ")
+function movie(movieSearch) {
 
     //If movie data not entered, movie is set to default
     if (movieSearch == undefined || null) {
@@ -106,4 +119,15 @@ function movie() {
         )
 };
 
+//Do as it says function based on random.txt
+function showInfo() {
+    fs.readFile("random.txt", "utf8", function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
 
+        var dataArr = data.split(",");
+        console.log(dataArr);
+        commands(data[0], dataArr[1]);
+    })
+}
