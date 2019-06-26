@@ -101,11 +101,11 @@ function concert(concertSearch) {
 function spotifySong(trackSearch) {
 
     //If track data not entered, track is set to default
-    if (trackSearch == undefined || null) {
+    if (trackSearch == undefined || trackSearch == null || trackSearch == "") {
         trackSearch = "The Sign Ace of Base";
     }
 
-    //Otherwise, search for track
+    //Otherwise, search for tracks
     spotify.search({
         type: "track",
         query: trackSearch,
@@ -131,24 +131,40 @@ function spotifySong(trackSearch) {
 function movie(movieSearch) {
 
     //If movie data not entered, movie is set to default
-    if (movieSearch == undefined || null) {
+    if (movieSearch == undefined || movieSearch == null || movieSearch == "") {
         movieSearch = "Mr. Nobody";
+        console.log("movie")
     }
 
     //Otherwise, get movie details
     axios.get("http://www.omdbapi.com/?t=" + movieSearch + "&y=&plot=short&apikey=trilogy")
         .then(function (response) {
             //Search for Rotten Tomatoes Ratings
-            function rottenTomatoesRating() {
-                return response.data.Ratings.find(function (rating) {
-                    if (rating.Source === "Rotten Tomatoes") {
-                        return this.Value;
-                    }
+            // function rottenTomatoesRating() {
+            //     return response.data.Ratings.find(function (rating) {
+            //         if (rating.Source === "Rotten Tomatoes") {
+            //             console.log(this.Value)
 
-                    else {
-                        return "Rotten Tomatoes Rating is not available";
-                    }
-                })
+            //             return this.Value;
+            //         }
+
+            //         else {
+            //             return "Rotten Tomatoes Rating is not available";
+            //         }
+            //     })
+            // }
+
+            // rottenTomatoesRating()
+            var rottenTomatoesRating;
+            for(var i = 0; i < response.data.Ratings.length; i++){
+                if(response.data.Ratings[i].Source === "Rotten Tomatoes"){
+                    rottenTomatoesRating = response.data.Ratings[i].Value;
+                    console.log(rottenTomatoesRating)
+                }
+                if(response.data.Ratings[i].Value === undefined){
+                    rottenTomatoesRating = "Not found"
+                }
+
             }
 
             //Log Movie Details
@@ -156,7 +172,7 @@ function movie(movieSearch) {
             console.log(chalk.cyan("Movie title: ") + response.data.Title);
             console.log(chalk.cyan("Year: ") + response.data.Year);
             console.log(chalk.cyan("imdb rating: ") + response.data.imdbRating);
-            console.log(chalk.cyan("Rotten Tomatoes rating: ") + rottenTomatoesRating());
+            console.log(chalk.cyan("Rotten Tomatoes rating: ") + rottenTomatoesRating);
             console.log(chalk.cyan("Country: ") + response.data.Country);
             console.log(chalk.cyan("Language: ") + response.data.Language);
             console.log(chalk.cyan("Plot: ") + response.data.Plot);
@@ -172,8 +188,8 @@ function showInfo() {
         if (err) {
             return console.log(err);
         }
-
         var dataArr = data.replace(/"/, "").split(",");
+        console.log(dataArr);
         commands(dataArr[0], dataArr[1]);
     })
 }
