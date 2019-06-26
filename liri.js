@@ -1,7 +1,8 @@
+//Require packages
 require("dotenv").config();
 var keys = require("./keys.js");
 var axios = require("axios");
-// var moment = require("moment-js");
+var moment = require("node-moment");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
@@ -22,17 +23,20 @@ else if (action === "movie-this") {
 function concert() {
     var artistSearch = process.argv.slice(3).join(" ");
 
+    //If artist data not entered, artist is set to default
     if (artistSearch == undefined || null) {
-        artistSearch = "Bruno Mars";
+        artistSearch = "Arvil Lavigne";
     }
-
+    
+    //Otherwise, get artist search details
     axios.get("https://rest.bandsintown.com/artists/" + artistSearch + "/events?app_id=codingbootcamp")
         .then(function (response) {
-            for (var i = 0; i < response.length; i++) {
+            for (var i = 0; i < response.data.length; i++) {
                 console.log("------------------------------------------------------------");
-                console.log("Artist: " + response[i].lineup);
-                console.log("Venue: " + response[i].venue.name + ", " + response[i].venue.city + ", " + response[i].venue.country);
-                console.log("Date: " + response[i].datetime);
+                console.log("Artist: " + response.data[i].lineup);
+                console.log("Venue: " + response.data[i].venue.name + ", " + response.data[i].venue.city + ", " + response.data[i].venue.country);
+                var date = moment(response.data[i].datetime, '"YYYY-MM-DDTkk-mm-ss"').format("MM/DD/YYYY");
+                console.log("Date: " + date);
                 console.log("------------------------------------------------------------");
             }
         }
@@ -43,10 +47,12 @@ function concert() {
 function spotifySong() {
     var trackSearch = process.argv.slice(3).join(" ");
 
+    //If track data not entered, track is set to default
     if (trackSearch == undefined || null) {
         trackSearch = "Aggretsuko Theme";
     }
 
+    //Otherwise, search for track
     spotify.search({
         type: "track",
         query: trackSearch,
@@ -72,11 +78,12 @@ function spotifySong() {
 function movie() {
     var movieSearch = process.argv.slice(3).join(" ")
 
+    //If movie data not entered, movie is set to default
     if (movieSearch == undefined || null) {
-        movieSearch = "The Notebook";
+        movieSearch = "Toy Story 4";
     }
 
-
+    //Otherwise, get movie details
     axios.get("http://www.omdbapi.com/?t=" + movieSearch + "&y=&plot=short&apikey=trilogy")
         .then(function (response) {
             //Search for Rotten Tomatoes Ratings
